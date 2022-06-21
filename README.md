@@ -1,4 +1,4 @@
-A simple, lightweight state management library.
+A simple, lightweight state management library for flutter.
 
 ## Features
 
@@ -16,12 +16,12 @@ You should finish all the job with side effects before changing the state.
 
 ### Keep your stores and effects for a certain period. 
 
-You can also specify when your stores and effects is constructed and destoryed.
+You can also specify when your stores and effects start or stop to listen to events.
 
 ## Getting started
 
 ```
-flutter pub add codux
+flutter pub add antenna
 ```
 
 ## Usage
