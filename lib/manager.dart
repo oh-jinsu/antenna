@@ -22,6 +22,20 @@ mixin AntennaManager<T extends StatefulWidget> on State<T> {
     _subscriptions.add(subscription);
   }
 
+  @protected
+  void sync<K>(
+    StoreApi<K> store, {
+    void Function(K value)? callback,
+  }) {
+    final subscription = store.stream.listen((event) {
+      setState(() {
+        callback?.call(event);
+      });
+    });
+
+    _subscriptions.add(subscription);
+  }
+
   @override
   void dispose() {
     for (final subscription in _subscriptions) {
