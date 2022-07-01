@@ -1,4 +1,4 @@
-A simple, lightweight state management library for flutter.
+A lean, flexible state management library for flutter.
 
 ## Features
 
@@ -58,7 +58,7 @@ final counterStore = createStore<int>(({
 ### Intercept the side effects. 
 
 ```dart
-on((event) {
+antenna.listen((event) {
   if (event == random) {
     final value = Random().nextInt(100);
 
@@ -70,12 +70,49 @@ on((event) {
 ### Keep your stores and effects for a certain period. 
 
 ```dart
-class _MyHomePageState extends State<MyHomePage> with AntennaManager {
+class _MyCounterState extends State<MyCounter> with AntennaManager {
   @override
   void initState() {
     open(counterStore);
+
+    on((event) {
+      if (event == random) {
+        final value = Random().nextInt(100);
+
+        dispatch(SetNumber(value));
+      }
+    });
+
+    super.initState();
   }
-  
-  ...
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            StoreConsumer(
+              store: counterStore,
+              builder: (context, data) => Text(data.toString()),
+            ),
+            TextButton(
+              onPressed: () => dispatch(increment),
+              child: const Text("Increment"),
+            ),
+            TextButton(
+              onPressed: () => dispatch(decrement),
+              child: const Text("Decrement"),
+            ),
+            TextButton(
+              onPressed: () => dispatch(random),
+              child: const Text("Random"),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 ```

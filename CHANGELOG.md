@@ -5,3 +5,7 @@
 ## 1.1.0
 
 - Add the sync feature.
+
+## 1.2.0
+
+- Refactor the apis.

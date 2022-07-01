@@ -1,6 +1,6 @@
 name: antenna
-description: A simple, lightweight state management library.
-version: 1.1.0
+description: A lean, flexible state management library for flutter.
+version: 1.2.0
 homepage: https://github.com/oh-jinsu/antenna
 
 environment:
