@@ -58,30 +58,32 @@ final counterStore = createStore<int>(({
 ### Intercept the side effects. 
 
 ```dart
-antenna.listen((event) {
+setRandomNumberEffect(event) {
   if (event == random) {
     final value = Random().nextInt(100);
 
     dispatch(SetNumber(value));
   }
-});
+}
 ```
 
-### Keep your stores and effects for a certain period. 
+### Keep your stores and effects for a certain period.
+
+```dart
+final subscription = connect(counterStore);
+
+final subscription = listen(setRandomNumberEffect);
+```
+
+### Antenna manager helps to control your subscriptions by the life cycle.
 
 ```dart
 class _MyCounterState extends State<MyCounter> with AntennaManager {
   @override
   void initState() {
-    open(counterStore);
+    $connect(counterStore);
 
-    on((event) {
-      if (event == random) {
-        final value = Random().nextInt(100);
-
-        dispatch(SetNumber(value));
-      }
-    });
+    $listen(setRandomNumberEffect);
 
     super.initState();
   }

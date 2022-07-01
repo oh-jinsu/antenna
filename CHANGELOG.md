@@ -9,3 +9,7 @@
 ## 1.2.0
 
 - Refactor the apis.
+
+## 1.2.1
+
+- Refactor the apis.
