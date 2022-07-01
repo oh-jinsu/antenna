@@ -7,15 +7,15 @@ import 'package:flutter/material.dart';
 mixin AntennaManager<T extends StatefulWidget> on State<T> {
   final _subscriptions = <StreamSubscription>[];
 
-  void open<K>(Store<K> store) {
+  void $connect<K>(Store<K> store) {
     final subscription = connect(store);
 
     _subscriptions.add(subscription);
   }
 
   @protected
-  void on<K>(void Function(dynamic event) effect) {
-    final subscription = antenna.listen(effect);
+  void $listen<K>(void Function(dynamic event) effect) {
+    final subscription = listen(effect);
 
     _subscriptions.add(subscription);
   }

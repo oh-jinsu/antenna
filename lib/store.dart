@@ -42,7 +42,7 @@ Store<T> createStore<T>(Reducer<T> reducer) => _Store<T>(reducer);
 StreamSubscription connect<T>(Store<T> store) {
   final instance = store as _Store<T>;
 
-  final subscription = antenna.listen(instance.dispatch);
+  final subscription = listen(instance.dispatch);
 
   return subscription;
 }
