@@ -1,9 +1,10 @@
 import 'dart:math';
 
 import 'package:antenna/antenna.dart';
+import 'package:antenna/manager.dart';
+import 'package:antenna/consumer.dart';
+import 'package:antenna/store.dart';
 import 'package:flutter/material.dart';
-
-void main() => runApp(const MyApp());
 
 const increment = "Increment";
 
@@ -36,23 +37,14 @@ final counterStore = createStore<int>(({
   return state;
 });
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class MyCounter extends StatefulWidget {
+  const MyCounter({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(home: MyHomePage());
-  }
+  State<MyCounter> createState() => _MyCounterState();
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> with AntennaManager {
+class _MyCounterState extends State<MyCounter> with AntennaManager {
   @override
   void initState() {
     open(counterStore);
@@ -75,7 +67,10 @@ class _MyHomePageState extends State<MyHomePage> with AntennaManager {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            watch(counterStore)((data) => Text(data.toString())),
+            StoreConsumer(
+              store: counterStore,
+              builder: (context, data) => Text(data.toString()),
+            ),
             TextButton(
               onPressed: () => dispatch(increment),
               child: const Text("Increment"),
@@ -94,3 +89,5 @@ class _MyHomePageState extends State<MyHomePage> with AntennaManager {
     );
   }
 }
+
+void main() => runApp(const MaterialApp(home: MyCounter()));

@@ -5,20 +5,16 @@ import 'package:rxdart/rxdart.dart';
 
 typedef Reducer<T> = T Function({T state, dynamic event});
 
-abstract class StoreApi<T> {
+abstract class Store<T> {
   T get state;
 
   Stream<T> get stream;
-
-  void _initialize();
-
-  void _dispatch(dynamic event);
 }
 
-class _Store<T> implements StoreApi<T> {
+class _Store<T> implements Store<T> {
   final Reducer<T> reducer;
 
-  final subject = BehaviorSubject<T>();
+  late final subject = BehaviorSubject<T>.seeded(reducer());
 
   @override
   T get state => subject.value;
@@ -28,31 +24,25 @@ class _Store<T> implements StoreApi<T> {
 
   _Store(this.reducer);
 
-  @override
-  void _initialize() {
-    subject.add(reducer());
-  }
+  void dispatch(event) {
+    final state = subject.value;
 
-  @override
-  void _dispatch(event) {
-    final result = reducer(state: subject.stream.value, event: event);
+    final result = reducer(state: state, event: event);
+
+    if (result == state) {
+      return;
+    }
 
     subject.sink.add(result);
   }
 }
 
-StoreApi<T> createStore<T>(Reducer<T> reducer) {
-  return _Store(reducer);
-}
+Store<T> createStore<T>(Reducer<T> reducer) => _Store<T>(reducer);
 
-void initialize(StoreApi store) {
-  store._initialize();
-}
+StreamSubscription connect<T>(Store<T> store) {
+  final instance = store as _Store<T>;
 
-StreamSubscription connect(StoreApi store) {
-  final subscription = listen((event) {
-    store._dispatch(event);
-  });
+  final subscription = antenna.listen(instance.dispatch);
 
   return subscription;
 }
