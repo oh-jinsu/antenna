@@ -14,12 +14,12 @@ class MyCounter extends StatefulWidget {
   State<MyCounter> createState() => _MyCounterState();
 }
 
-class _MyCounterState extends State<MyCounter> with AntennaManager {
+class _MyCounterState extends State<MyCounter> with AntennaMixin {
   @override
   void initState() {
-    $connect(counterStore);
+    connect(counterStore);
 
-    $listen((event) {
+    listen((event) {
       if (event == random) {
         final value = Random().nextInt(100);
 

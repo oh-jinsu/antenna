@@ -39,10 +39,10 @@ class _Store<T> implements Store<T> {
 
 Store<T> createStore<T>(Reducer<T> reducer) => _Store<T>(reducer);
 
-StreamSubscription connect<T>(Store<T> store) {
+StreamSubscription connectStore<T>(Store<T> store) {
   final instance = store as _Store<T>;
 
-  final subscription = listen(instance.dispatch);
+  final subscription = listenEffect(instance.dispatch);
 
   return subscription;
 }

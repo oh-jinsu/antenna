@@ -5,13 +5,14 @@ import 'package:flutter/material.dart';
 
 class StoreConsumer<T> extends StatefulWidget {
   final Store<T> store;
+
   final Widget Function(BuildContext context, T state) builder;
 
   const StoreConsumer({
-    Key? key,
+    super.key,
     required this.store,
     required this.builder,
-  }) : super(key: key);
+  });
 
   @override
   State<StoreConsumer> createState() => _StoreConsumerState<T>();
@@ -27,11 +28,11 @@ class _StoreConsumerState<T> extends State<StoreConsumer<T>> {
     state = widget.store.state;
 
     subscription = widget.store.stream.listen((event) {
-      setState(() {
-        if (state == event) {
-          return;
-        }
+      if (state == event) {
+        return;
+      }
 
+      setState(() {
         state = event;
       });
     });
