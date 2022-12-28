@@ -1,7 +1,7 @@
 import 'dart:async';
 
+import 'package:antenna/effect.dart';
 import 'package:antenna/store.dart';
-import 'package:antenna/antenna.dart';
 import 'package:flutter/material.dart';
 
 mixin AntennaMixin<T extends StatefulWidget> on State<T> {

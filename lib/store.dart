@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:antenna/antenna.dart';
+import 'package:antenna/effect.dart';
 import 'package:rxdart/rxdart.dart';
 
 typedef Reducer<T> = T Function({T state, dynamic event});

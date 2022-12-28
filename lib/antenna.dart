@@ -1,23 +1,12 @@
 library antenna;
 
-import 'dart:async';
+export "package:antenna/channel.dart" show dispatch;
 
-import 'package:rxdart/subjects.dart' show PublishSubject;
+export 'package:antenna/store.dart'
+    show Reducer, Store, createStore, connectStore;
+
+export "package:antenna/effect.dart" show Effect, when, listenEffect;
 
 export 'package:antenna/mixin.dart' show AntennaMixin;
 
 export 'package:antenna/consumer.dart' show StoreConsumer;
-
-export 'package:antenna/store.dart' show createStore, connectStore;
-
-final _channel = PublishSubject();
-
-@override
-StreamSubscription listenEffect(void Function(dynamic event) eventListener) {
-  return _channel.listen(eventListener);
-}
-
-@override
-void dispatch(event) {
-  return _channel.sink.add(event);
-}
