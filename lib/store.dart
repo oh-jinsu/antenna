@@ -1,48 +1,61 @@
-import 'dart:async';
+import 'package:antenna/channel.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import 'package:antenna/effect.dart';
-import 'package:rxdart/rxdart.dart';
+abstract class Store<T> extends ChangeNotifier {
+  late T state;
 
-typedef Reducer<T> = T Function({T state, dynamic event});
+  Store(T initial) {
+    state = reducer(initial, null);
+  }
 
-abstract class Store<T> {
-  T get state;
-
-  Stream<T> get stream;
-}
-
-class _Store<T> implements Store<T> {
-  final Reducer<T> reducer;
-
-  late final subject = BehaviorSubject<T>.seeded(reducer());
-
-  @override
-  T get state => subject.value;
-
-  @override
-  Stream<T> get stream => subject;
-
-  _Store(this.reducer);
+  T reducer(T state, dynamic event);
 
   void dispatch(event) {
-    final state = subject.value;
-
-    final result = reducer(state: state, event: event);
-
-    if (result == state) {
+    final result = reducer(state, event);
+    if (!shouldUpdate(state, result)) {
       return;
     }
 
-    subject.sink.add(result);
+    state = result;
+
+    notifyListeners();
+  }
+
+  bool shouldUpdate(T oldState, T newState) {
+    return oldState != newState;
   }
 }
 
-Store<T> createStore<T>(Reducer<T> reducer) => _Store<T>(reducer);
+class StoreProvider<T extends Store> extends StatefulWidget {
+  final Widget? child;
 
-StreamSubscription connectStore<T>(Store<T> store) {
-  final instance = store as _Store<T>;
+  final T store;
 
-  final subscription = listenEffect(instance.dispatch);
+  const StoreProvider({
+    super.key,
+    this.child,
+    required this.store,
+  });
 
-  return subscription;
+  @override
+  State<StoreProvider<T>> createState() => _StoreProviderState<T>();
+}
+
+class _StoreProviderState<T extends Store> extends State<StoreProvider<T>>
+    with ChannelMixin {
+  @override
+  void onListen(event) {
+    widget.store.dispatch(event);
+
+    super.onListen(event);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (context) => widget.store,
+      child: widget.child,
+    );
+  }
 }

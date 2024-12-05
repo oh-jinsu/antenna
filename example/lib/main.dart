@@ -1,57 +1,36 @@
-import 'dart:math';
-
 import 'package:antenna/antenna.dart';
-import 'package:example/events.dart';
 import 'package:example/store.dart';
 import 'package:flutter/material.dart';
 
-void main() => runApp(const MaterialApp(home: MyCounter()));
+void main() {
+  runApp(const MaterialApp(home: ChannelProvider(child: MyCounter())));
+}
 
 class MyCounter extends StatefulWidget {
-  const MyCounter({Key? key}) : super(key: key);
+  const MyCounter({super.key});
 
   @override
   State<MyCounter> createState() => _MyCounterState();
 }
 
-class _MyCounterState extends State<MyCounter> with AntennaMixin {
-  @override
-  void initState() {
-    connect(counterStore);
-
-    listen((event) {
-      if (event == random) {
-        final value = Random().nextInt(100);
-
-        dispatch(SetNumber(value));
-      }
-    });
-
-    super.initState();
-  }
-
+class _MyCounterState extends State<MyCounter> with ChannelMixin {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+    return StoreProvider(
+      store: CountStore(),
+      child: Scaffold(
+        body: Column(
           children: [
-            StoreConsumer(
-              store: counterStore,
-              builder: (context, data) => Text(data.toString()),
+            Consumer<CountStore>(
+              builder: (context, store, child) => Text("${store.state}"),
             ),
             TextButton(
-              onPressed: () => dispatch(increment),
+              onPressed: () => dispatch("increment"),
               child: const Text("Increment"),
             ),
             TextButton(
-              onPressed: () => dispatch(decrement),
+              onPressed: () => dispatch("decrement"),
               child: const Text("Decrement"),
-            ),
-            TextButton(
-              onPressed: () => dispatch(random),
-              child: const Text("Random"),
             ),
           ],
         ),

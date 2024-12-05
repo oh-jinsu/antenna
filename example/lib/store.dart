@@ -1,21 +1,18 @@
 import 'package:antenna/store.dart';
-import 'package:example/events.dart';
 
-final counterStore = createStore<int>(({
-  int state = 0,
-  dynamic event,
-}) {
-  if (event == increment) {
-    return state + 1;
+class CountStore extends Store<int> {
+  CountStore() : super(0);
+
+  @override
+  reducer(state, event) {
+    if (event == "increment") {
+      return state + 1;
+    }
+
+    if (event == "decrement") {
+      return state - 1;
+    }
+
+    return state;
   }
-
-  if (event == decrement) {
-    return state - 1;
-  }
-
-  if (event is SetNumber) {
-    return event.value;
-  }
-
-  return state;
-});
+}

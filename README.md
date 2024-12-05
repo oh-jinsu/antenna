@@ -1,22 +1,4 @@
-A lean, flexible state management library for flutter.
-
-## Features
-
-### Declare your various events.
-
-You can list all the events that will happen in your app.
-
-### Implement your tiny store. 
-
-You can store the current state of a particular model separately.
-
-### Intercept the side effects. 
-
-You should finish all the job with side effects before changing the state.
-
-### Keep your stores and effects for a certain period. 
-
-You can also specify when your stores and effects start or stop to listen to events.
+A simple and flexible state management library for flutter.
 
 ## Getting started
 
@@ -26,90 +8,65 @@ flutter pub add antenna
 
 ## Usage
 
-### Declare your various events.
+### Predefined the data mutation. 
 
 ```dart
-const increment = "increment";
-```
+import 'package:antenna/store.dart';
 
-### Implement your tiny store. 
+class CountStore extends Store<int> {
+  CountStore() : super(0);
 
-```dart
-final counterStore = createStore<int>(({
-  int state = 0,
-  dynamic event,
-}) {
-  if (event == increment) {
-    return state + 1;
-  }
+  @override
+  reducer(state, event) {
+    if (event == "increment") {
+      return state + 1;
+    }
 
-  if (event == decrement) {
-    return state - 1;
-  }
+    if (event == "decrement") {
+      return state - 1;
+    }
 
-  if (event is SetNumber) {
-    return event.value;
-  }
-
-  return state;
-});
-```
-
-### Intercept the side effects. 
-
-```dart
-setRandomNumberEffect(event) {
-  if (event == random) {
-    final value = Random().nextInt(100);
-
-    dispatch(SetNumber(value));
+    return state;
   }
 }
 ```
 
-### Keep your stores and effects for a certain period.
+### Dispatch event and get fresh data.
 
 ```dart
-final subscription = connect(counterStore);
+import 'package:antenna/antenna.dart';
+import 'package:example/store.dart';
+import 'package:flutter/material.dart';
 
-final subscription = listen(setRandomNumberEffect);
-```
+void main() {
+  runApp(const MaterialApp(home: ChannelProvider(child: MyCounter())));
+}
 
-### Antenna manager helps to control your subscriptions by the life cycle.
+class MyCounter extends StatefulWidget {
+  const MyCounter({super.key});
 
-```dart
-class _MyCounterState extends State<MyCounter> with AntennaManager {
   @override
-  void initState() {
-    $connect(counterStore);
+  State<MyCounter> createState() => _MyCounterState();
+}
 
-    $listen(setRandomNumberEffect);
-
-    super.initState();
-  }
-
+class _MyCounterState extends State<MyCounter> with ChannelMixin {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+    return StoreProvider(
+      store: CountStore(),
+      child: Scaffold(
+        body: Column(
           children: [
-            StoreConsumer(
-              store: counterStore,
-              builder: (context, data) => Text(data.toString()),
+            Consumer<CountStore>(
+              builder: (context, store, child) => Text("${store.state}"),
             ),
             TextButton(
-              onPressed: () => dispatch(increment),
+              onPressed: () => dispatch("increment"),
               child: const Text("Increment"),
             ),
             TextButton(
-              onPressed: () => dispatch(decrement),
+              onPressed: () => dispatch("decrement"),
               child: const Text("Decrement"),
-            ),
-            TextButton(
-              onPressed: () => dispatch(random),
-              child: const Text("Random"),
             ),
           ],
         ),
@@ -117,4 +74,5 @@ class _MyCounterState extends State<MyCounter> with AntennaManager {
     );
   }
 }
+
 ```
