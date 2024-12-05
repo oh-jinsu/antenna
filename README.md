@@ -3,7 +3,7 @@ A simple and flexible state management library for flutter.
 ## Getting started
 
 ```
-flutter pub add antenna
+flutter pub add event_store
 ```
 
 ## Usage
@@ -11,7 +11,7 @@ flutter pub add antenna
 ### Predefined the data mutation. 
 
 ```dart
-import 'package:antenna/store.dart';
+import 'package:event_store/store.dart';
 
 class CountStore extends Store<int> {
   CountStore() : super(0);
@@ -34,7 +34,7 @@ class CountStore extends Store<int> {
 ### Dispatch event and get fresh data.
 
 ```dart
-import 'package:antenna/antenna.dart';
+import 'package:event_store/event_store.dart';
 import 'package:example/store.dart';
 import 'package:flutter/material.dart';
 

@@ -31,7 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  antenna:
+  event_store:
     path: ../
 
 

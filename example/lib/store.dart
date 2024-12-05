@@ -1,4 +1,4 @@
-import 'package:antenna/store.dart';
+import 'package:event_store/store.dart';
 
 class CountStore extends Store<int> {
   CountStore() : super(0);
