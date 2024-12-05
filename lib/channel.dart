@@ -2,10 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rxdart/subjects.dart' show PublishSubject;
 
 class Channel {
-  final _controller = PublishSubject();
+  final _controller = StreamController.broadcast();
 
   Stream get stream => _controller.stream;
 

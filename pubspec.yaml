@@ -1,7 +1,7 @@
-name: event_store
+name: channel_store
 description: A simple and flexible state management library for flutter.
-version: 2.0.0
-homepage: https://github.com/oh-jinsu/event_store
+version: 1.0.0
+homepage: https://github.com/oh-jinsu/channel_store
 
 environment:
   sdk: ">=3.5.4 <4.0.0"
@@ -11,7 +11,6 @@ dependencies:
   flutter:
     sdk: flutter
   provider: ^6.1.2
-  rxdart: ^0.28.0
 
 dev_dependencies:
   flutter_test:

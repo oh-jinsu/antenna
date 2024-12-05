@@ -3,7 +3,7 @@ A simple and flexible state management library for flutter.
 ## Getting started
 
 ```
-flutter pub add event_store
+flutter pub add channel_store
 ```
 
 ## Usage
@@ -11,7 +11,7 @@ flutter pub add event_store
 ### Predefined the data mutation. 
 
 ```dart
-import 'package:event_store/store.dart';
+import 'package:channel_store/store.dart';
 
 class CountStore extends Store<int> {
   CountStore() : super(0);
@@ -34,7 +34,7 @@ class CountStore extends Store<int> {
 ### Dispatch event and get fresh data.
 
 ```dart
-import 'package:event_store/event_store.dart';
+import 'package:channel_store/channel_store.dart';
 import 'package:example/store.dart';
 import 'package:flutter/material.dart';
 

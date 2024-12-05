@@ -1,4 +1,4 @@
-import 'package:event_store/event_store.dart';
+import 'package:channel_store/channel_store.dart';
 import 'package:example/store.dart';
 import 'package:flutter/material.dart';
 
