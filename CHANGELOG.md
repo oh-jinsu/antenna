@@ -13,3 +13,7 @@
 ## 1.2.1
 
 - Refactor the apis.
+
+## 2.0.0
+
+- Simplify the apis.
