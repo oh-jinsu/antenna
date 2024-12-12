@@ -20,11 +20,22 @@ class Channel {
 class ChannelProvider extends StatelessWidget {
   final Widget? child;
 
+  final Widget Function(BuildContext, Channel, Widget?)? builder;
 
-  const ChannelProvider({super.key, this.child});
+  const ChannelProvider({super.key, this.child, this.builder,});
 
   @override
   Widget build(BuildContext context) {
+    if (builder != null) {
+      return Provider(
+        create: (context) => Channel(),
+        child: Consumer<Channel>(
+          builder: builder!,
+          child: child,
+        ),
+      );
+    }
+
     return Provider(
       create: (context) => Channel(),
       child: child,

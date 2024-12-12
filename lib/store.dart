@@ -32,10 +32,13 @@ class StoreProvider<T extends Store> extends StatefulWidget {
 
   final T store;
 
+  final Widget Function(BuildContext, T, Widget?)? builder;
+
   const StoreProvider({
     super.key,
     this.child,
     required this.store,
+    this.builder,
   });
 
   @override
@@ -53,6 +56,16 @@ class _StoreProviderState<T extends Store> extends State<StoreProvider<T>>
 
   @override
   Widget build(BuildContext context) {
+    if (widget.builder != null) {
+      return ChangeNotifierProvider(
+        create: (context) => widget.store,
+        child: Consumer<T>(
+          builder: widget.builder!,
+          child: widget.child,
+        ),
+      );
+    }
+
     return ChangeNotifierProvider(
       create: (context) => widget.store,
       child: widget.child,
