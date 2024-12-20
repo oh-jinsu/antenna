@@ -2,11 +2,15 @@ import 'package:channel_store/channel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-abstract class Store<T> extends ChangeNotifier {
-  late T state;
+abstract class Controller<T> extends ChangeNotifier {
+  late T _state;
 
-  Store(T initial) {
-    state = reducer(initial, null);
+  T get state {
+    return _state;
+  }
+
+  Controller(T initial) {
+    _state = reducer(initial, null);
   }
 
   @protected
@@ -19,7 +23,7 @@ abstract class Store<T> extends ChangeNotifier {
     return state;
   }
 
-  void dispatch(event) async {
+  void onListen(dynamic event) async {
     final result1 = await reducerAsync(state, event);
 
     final result2 = reducer(result1, event);
@@ -33,7 +37,7 @@ abstract class Store<T> extends ChangeNotifier {
       return;
     }
 
-    state = newState;
+    _state = newState;
 
     notifyListeners();
   }
@@ -43,14 +47,14 @@ abstract class Store<T> extends ChangeNotifier {
   }
 }
 
-class StoreProvider<T extends Store> extends StatefulWidget {
+class ControllerProvider<T extends Controller> extends StatefulWidget {
   final Widget? child;
 
   final T store;
 
   final Widget Function(BuildContext, T, Widget?)? builder;
 
-  const StoreProvider({
+  const ControllerProvider({
     super.key,
     this.child,
     required this.store,
@@ -58,10 +62,10 @@ class StoreProvider<T extends Store> extends StatefulWidget {
   });
 
   @override
-  State<StoreProvider<T>> createState() => _StoreProviderState<T>();
+  State<ControllerProvider<T>> createState() => _ControllerProviderState<T>();
 }
 
-class _StoreProviderState<T extends Store> extends State<StoreProvider<T>>
+class _ControllerProviderState<T extends Controller> extends State<ControllerProvider<T>>
     with ChannelMixin {
   @override
   void initState() {
@@ -72,7 +76,7 @@ class _StoreProviderState<T extends Store> extends State<StoreProvider<T>>
 
   @override
   void onListen(event) {
-    widget.store.dispatch(event);
+    widget.store.onListen(event);
 
     super.onListen(event);
   }

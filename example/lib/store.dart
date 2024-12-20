@@ -1,6 +1,6 @@
 import 'package:channel_store/channel_store.dart';
 
-class CountStore extends Store<int> {
+class CountStore extends Controller<int> {
   CountStore() : super(0);
 
   @override

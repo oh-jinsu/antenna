@@ -16,13 +16,13 @@ class MyCounter extends StatefulWidget {
 class _MyCounterState extends State<MyCounter> with ChannelMixin {
   @override
   Widget build(BuildContext context) {
-    return StoreProvider(
+    return ControllerProvider(
       store: CountStore(),
       child: Scaffold(
         body: Column(
           children: [
             Consumer<CountStore>(
-              builder: (context, store, child) => Text("${store.state}"),
+              builder: (context, controller, child) => Text("${controller.state}"),
             ),
             TextButton(
               onPressed: () => dispatch("increment"),
