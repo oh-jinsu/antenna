@@ -76,14 +76,14 @@ abstract class Controller<T> extends ChangeNotifier {
 class ControllerProvider<T extends Controller> extends StatefulWidget {
   final Widget? child;
 
-  final T store;
+  final T controller;
 
   final Widget Function(BuildContext, T, Widget?)? builder;
 
   const ControllerProvider({
     super.key,
     this.child,
-    required this.store,
+    required this.controller,
     this.builder,
   });
 
@@ -95,16 +95,16 @@ class _ControllerProviderState<T extends Controller>
     extends State<ControllerProvider<T>> {
   @override
   void initState() {
-    widget.store.context = context;
+    widget.controller.context = context;
 
-    widget.store.init();
+    widget.controller.init();
 
     super.initState();
   }
 
   @override
   void dispose() {
-    widget.store.dispose();
+    widget.controller.dispose();
 
     super.dispose();
   }
@@ -114,8 +114,8 @@ class _ControllerProviderState<T extends Controller>
     return Consumer<Channel>(
       builder: (context, channel, child) {
         return ChangeNotifierProvider(
-          create: (context) => widget.store,
-          child: widget.builder?.call(context, widget.store, widget.child) ??
+          create: (context) => widget.controller,
+          child: widget.builder?.call(context, widget.controller, widget.child) ??
               widget.child,
         );
       },

@@ -8,7 +8,7 @@ void main() {
     MaterialApp(
       home: ChannelProvider(
         child: ControllerProvider(
-          store: CountController(),
+          controller: CountController(),
           child: const MyCounter(),
         ),
       ),
