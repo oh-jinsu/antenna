@@ -13,11 +13,17 @@ abstract class Store<T> extends ChangeNotifier {
 
   void dispatch(event) {
     final result = reducer(state, event);
-    if (!shouldUpdate(state, result)) {
+
+    update(result);
+  }
+
+  @protected
+  void update(T newState) {
+    if (!shouldUpdate(state, newState)) {
       return;
     }
 
-    state = result;
+    state = newState;
 
     notifyListeners();
   }
