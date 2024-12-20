@@ -9,12 +9,22 @@ abstract class Store<T> extends ChangeNotifier {
     state = reducer(initial, null);
   }
 
+  @protected
+  void init() {}
+
+  @protected
   T reducer(T state, dynamic event);
 
-  void dispatch(event) {
-    final result = reducer(state, event);
+  Future<T> reducerAsync(T state, dynamic event) async {
+    return state;
+  }
 
-    update(result);
+  void dispatch(event) async {
+    final result1 = await reducerAsync(state, event);
+
+    final result2 = reducer(result1, event);
+
+    update(result2);
   }
 
   @protected
@@ -54,10 +64,24 @@ class StoreProvider<T extends Store> extends StatefulWidget {
 class _StoreProviderState<T extends Store> extends State<StoreProvider<T>>
     with ChannelMixin {
   @override
+  void initState() {
+    widget.store.init();
+
+    super.initState();
+  }
+
+  @override
   void onListen(event) {
     widget.store.dispatch(event);
 
     super.onListen(event);
+  }
+
+  @override
+  void dispose() {
+    widget.store.dispose();
+
+    super.dispose();
   }
 
   @override
