@@ -1,7 +1,7 @@
 import 'package:channel_store/channel_store.dart';
 
-class CountStore extends Controller<int> {
-  CountStore() : super(0);
+class CountController extends Controller<int> {
+  CountController() : super(0);
 
   @override
   reducer(state, event) {

@@ -17,29 +17,30 @@ class Channel {
   }
 }
 
-class ChannelProvider extends StatelessWidget {
+class ChannelProvider extends StatefulWidget {
   final Widget? child;
 
   final Widget Function(BuildContext, Channel, Widget?)? builder;
 
-  const ChannelProvider({super.key, this.child, this.builder,});
+  const ChannelProvider({
+    super.key,
+    this.child,
+    this.builder,
+  });
+
+  @override
+  State<ChannelProvider> createState() => _ChannelProviderState();
+}
+
+class _ChannelProviderState extends State<ChannelProvider> {
+  final channel = Channel();
 
   @override
   Widget build(BuildContext context) {
-    if (builder != null) {
-      return Provider(
-        create: (context) => Channel(),
-        child: Consumer<Channel>(
-          builder: builder!,
-          child: child,
-        ),
-      );
-    }
-
     return Provider(
-      create: (context) => Channel(),
-      child: child,
-  
+      create: (context) => channel,
+      child:
+          widget.builder?.call(context, channel, widget.child) ?? widget.child,
     );
   }
 }

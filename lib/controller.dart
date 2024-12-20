@@ -1,8 +1,16 @@
+import 'dart:async';
+
 import 'package:channel_store/channel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 abstract class Controller<T> extends ChangeNotifier {
+  late BuildContext context;
+
+  get channel => Provider.of<Channel>(context, listen: false);
+
+  final List<StreamSubscription> subscriptions = [];
+
   late T _state;
 
   T get state {
@@ -14,7 +22,25 @@ abstract class Controller<T> extends ChangeNotifier {
   }
 
   @protected
-  void init() {}
+  @mustCallSuper
+  void init() {
+    subscribe(onListen);
+  }
+
+  void subscribe(void Function(dynamic) callback) {
+    final sub = channel.stream.listen(callback);
+
+    subscriptions.add(sub);
+  }
+
+  @override
+  void dispose() {
+    for (final sub in subscriptions) {
+      sub.cancel();
+    }
+
+    super.dispose();
+  }
 
   @protected
   T reducer(T state, dynamic event);
@@ -65,20 +91,15 @@ class ControllerProvider<T extends Controller> extends StatefulWidget {
   State<ControllerProvider<T>> createState() => _ControllerProviderState<T>();
 }
 
-class _ControllerProviderState<T extends Controller> extends State<ControllerProvider<T>>
-    with ChannelMixin {
+class _ControllerProviderState<T extends Controller>
+    extends State<ControllerProvider<T>> {
   @override
   void initState() {
+    widget.store.context = context;
+
     widget.store.init();
 
     super.initState();
-  }
-
-  @override
-  void onListen(event) {
-    widget.store.onListen(event);
-
-    super.onListen(event);
   }
 
   @override
@@ -90,19 +111,14 @@ class _ControllerProviderState<T extends Controller> extends State<ControllerPro
 
   @override
   Widget build(BuildContext context) {
-    if (widget.builder != null) {
-      return ChangeNotifierProvider(
-        create: (context) => widget.store,
-        child: Consumer<T>(
-          builder: widget.builder!,
-          child: widget.child,
-        ),
-      );
-    }
-
-    return ChangeNotifierProvider(
-      create: (context) => widget.store,
-      child: widget.child,
+    return Consumer<Channel>(
+      builder: (context, channel, child) {
+        return ChangeNotifierProvider(
+          create: (context) => widget.store,
+          child: widget.builder?.call(context, widget.store, widget.child) ??
+              widget.child,
+        );
+      },
     );
   }
 }
