@@ -101,20 +101,14 @@ class _ControllerProviderState<T extends Controller>
 
     super.initState();
   }
-
-  @override
-  void dispose() {
-    widget.controller.dispose();
-
-    super.dispose();
-  }
-
+ 
   @override
   Widget build(BuildContext context) {
     return Consumer<Channel>(
       builder: (context, channel, child) {
         return ChangeNotifierProvider(
           create: (context) => widget.controller,
+          
           child: widget.builder?.call(context, widget.controller, widget.child) ??
               widget.child,
         );
