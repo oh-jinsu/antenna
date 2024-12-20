@@ -15,6 +15,10 @@ class Channel {
   void close() {
     _controller.close();
   }
+
+  static Channel of(BuildContext context) {
+    return Provider.of<Channel>(context, listen: false);
+  }
 }
 
 class ChannelProvider extends StatefulWidget {
@@ -47,6 +51,7 @@ class _ChannelProviderState extends State<ChannelProvider> {
 
 mixin ChannelMixin<T extends StatefulWidget> on State<T> {
   get channel => Provider.of<Channel>(context, listen: false);
+  
   final List<StreamSubscription> subscriptions = [];
 
   @override

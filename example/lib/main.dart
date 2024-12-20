@@ -16,14 +16,9 @@ void main() {
   );
 }
 
-class MyCounter extends StatefulWidget {
+class MyCounter extends StatelessWidget {
   const MyCounter({super.key});
 
-  @override
-  State<MyCounter> createState() => _MyCounterState();
-}
-
-class _MyCounterState extends State<MyCounter> with ChannelMixin {
   @override
   Widget build(BuildContext context) {
     if (kDebugMode) {
@@ -38,11 +33,11 @@ class _MyCounterState extends State<MyCounter> with ChannelMixin {
                 Text("${controller.state}"),
           ),
           TextButton(
-            onPressed: () => dispatch("increment"),
+            onPressed: () => Channel.of(context).dispatch("increment"),
             child: const Text("Increment"),
           ),
           TextButton(
-            onPressed: () => dispatch("decrement"),
+            onPressed: () => Channel.of(context).dispatch("decrement"),
             child: const Text("Decrement"),
           ),
         ],
